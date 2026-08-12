@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sandy Design Studio · Journal</title>
+    <!-- Tailwind + additional fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #dbdbdb;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .font-serif-italic {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        /* ── Chevron pattern ── */
+        .pattern-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 140px;
+            display: flex;
+            z-index: 0;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .pattern-left {
+            flex: 1;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                115deg,
+                transparent,
+                transparent 45px,
+                rgba(255, 255, 255, 0.9) 45px,
+                rgba(255, 255, 255, 0.9) 46px
+            );
+            background-position: bottom right;
+        }
+
+        .pattern-right {
+            flex: 1;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                -115deg,
+                transparent,
+                transparent 45px,
+                rgba(255, 255, 255, 0.9) 45px,
+                rgba(255, 255, 255, 0.9) 46px
+            );
+            background-position: bottom left;
+        }
+
+        /* ── 3D Carousel ── */
+        .perspective-wrapper {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            height: 380px;
+            z-index: 10;
+            touch-action: pan-y;
+        }
+
+        .card {
+            background-color: #878787;
+            border-radius: 16px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            display: block;
+            transform: translateZ(1px);
+        }
+
+        .pos-0 {
+            width: 260px;
+            height: 340px;
+            transform: translate(-50%, -50%) translateZ(0);
+            z-index: 5;
+            opacity: 1;
+            box-shadow: 0 40px 80px -10px rgba(0, 0, 0, 0.45),
+                        0 0 0 1px rgba(255, 255, 255, 0.2),
+                        inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .pos-m1 {
+            width: 240px;
+            height: 310px;
+            transform: translate(-50%, -50%) translateX(-264px) rotateY(12deg) rotateZ(-2deg) translateZ(-40px);
+            z-index: 4;
+            opacity: 0.5;
+        }
+
+        .pos-p1 {
+            width: 240px;
+            height: 310px;
+            transform: translate(-50%, -50%) translateX(264px) rotateY(-12deg) rotateZ(2deg) translateZ(-40px);
+            z-index: 4;
+            opacity: 0.5;
+        }
+
+        .pos-m2 {
+            width: 220px;
+            height: 280px;
+            transform: translate(-50%, -50%) translateX(-503px) rotateY(22deg) rotateZ(-4deg) translateZ(-90px);
+            z-index: 3;
+            opacity: 0.25;
+        }
+
+        .pos-p2 {
+            width: 220px;
+            height: 280px;
+            transform: translate(-50%, -50%) translateX(503px) rotateY(-22deg) rotateZ(4deg) translateZ(-90px);
+            z-index: 3;
+            opacity: 0.25;
+        }
+
+        /* ── Featured Recognition (new section) ── */
+        .recognition-section {
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 120px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .recognition-label {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.6em;
+            text-transform: uppercase;
+            color: #111111;
+            text-align: center;
+            margin-bottom: 32px;
+            opacity: 0.6;
+        }
+
+        .recognition-card {
+            background: #ffffff;
+            border-radius: 28px;
+            height: 580px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.06);
+            display: flex;
+        }
+
+        .recognition-content {
+            flex: 0 0 50%;
+            padding: 88px 64px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            z-index: 10;
+        }
+
+        .recognition-kicker {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #111111;
+            margin-bottom: 24px;
+            opacity: 0.45;
+        }
+
+        .recognition-headline {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 56px;
+            font-weight: 600;
+            line-height: 1.06;
+            color: #111111;
+            margin-bottom: 22px;
+            letter-spacing: -0.02em;
+        }
+
+        .recognition-divider {
+            width: 52px;
+            height: 4px;
+            background: #2b4ed3;
+            margin-bottom: 26px;
+            border-radius: 2px;
+        }
+
+        .recognition-desc {
+            font-size: 13px;
+            line-height: 2;
+            color: #777777;
+            font-weight: 400;
+            max-width: 340px;
+            margin-bottom: 52px;
+        }
+
+        .recognition-cta {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #111111;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            padding-bottom: 6px;
+            border-bottom: 3px solid #2b4ed3;
+            align-self: flex-start;
+            transition: opacity 0.2s ease;
+        }
+
+        .recognition-cta:hover {
+            opacity: 0.55;
+        }
+
+        .recognition-cta span {
+            margin-left: 8px;
+            font-size: 18px;
+        }
+
+        .recognition-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 58%;
+            background-color: #6b6b6b;
+            clip-path: polygon(14% 0, 100% 0, 100% 100%, 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            background-image: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .recognition-image:hover {
+            transform: scale(1.015);
+        }
+
+        .recognition-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.10);
+            z-index: 1;
+        }
+
+        .recognition-img-label {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            font-size: 13px;
+            letter-spacing: 0.5em;
+            font-weight: 500;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        /* ── Section divider line ── */
+        .section-divider {
+            width: 100%;
+            max-width: 1100px;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 80px 0 20px 0;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1100px) {
+            .perspective-wrapper {
+                transform: scale(0.85);
+            }
+        }
+        @media (max-width: 900px) {
+            .perspective-wrapper {
+                transform: scale(0.65);
+            }
+        }
+        @media (max-width: 820px) {
+            .recognition-card {
+                height: auto;
+                flex-direction: column;
+                border-radius: 24px;
+            }
+            .recognition-content {
+                flex: 1;
+                padding: 52px 36px 40px;
+            }
+            .recognition-image {
+                position: relative;
+                width: 100%;
+                height: 300px;
+                clip-path: none;
+                border-radius: 0 0 24px 24px;
+            }
+            .recognition-headline {
+                font-size: 42px;
+            }
+            .recognition-desc {
+                max-width: 100%;
+            }
+            .recognition-section {
+                margin-top: 80px;
+            }
+        }
+        @media (max-width: 600px) {
+            .perspective-wrapper {
+                transform: scale(0.45);
+            }
+        }
+        @media (max-width: 480px) {
+            .recognition-content {
+                padding: 36px 24px 32px;
+            }
+            .recognition-headline {
+                font-size: 32px;
+            }
+            .recognition-desc {
+                font-size: 11.5px;
+            }
+            .recognition-image {
+                height: 220px;
+            }
+            .recognition-section {
+                margin-top: 60px;
+            }
+            .section-divider {
+                margin: 50px 0 10px 0;
+            }
+        }
+
+        /* Journal grid extras */
+        .article-card {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+        }
+        .article-image-container {
+            background-color: #f3f4f6;
+        }
+        .nav-link {
+            position: relative;
+            padding-bottom: 0.25rem;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── Chevron Pattern ─── -->
+    <div class="pattern-container">
+        <div class="pattern-left"></div>
+        <div class="pattern-right"></div>
+    </div>
+
+    <!-- ─── Main Content ─── -->
+    <div class="w-full max-w-[1200px] mx-auto px-4 flex flex-col items-center relative z-10">
+
+        <!-- Header -->
+        <header class="text-center w-full mb-14">
+            <h1 class="text-[#0a0a0a] m-0 p-0 flex flex-col items-center">
+                <span class="text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] tracking-tight leading-[1.1] font-medium">
+                    Ideas that move
+                </span>
+                <span class="font-serif-italic text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[0.85] tracking-normal -mt-2">
+                    brands forward
+                </span>
+            </h1>
+
+            <p class="mt-8 text-[15px] md:text-[17px] text-[#111111] max-w-md mx-auto font-normal leading-snug">
+                Insights, Strategies, And Creative Thinking From<br />
+                The Team Behind Sandy Design Studio.
+            </p>
+
+            <button class="mt-8 bg-[#1f242d] text-white px-6 py-2.5 rounded-full font-medium text-[15px] inline-flex items-center justify-center hover:bg-black transition-colors">
+                Explore Articles
+                <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Carousel -->
+        <main class="w-full">
+            <div class="perspective-wrapper" id="carousel">
+                <div class="card" data-index="0">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" alt="Abstract liquid design" />
+                </div>
+                <div class="card" data-index="1">
+                    <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=600&auto=format&fit=crop" alt="Abstract shapes" />
+                </div>
+                <div class="card" data-index="2">
+                    <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=600&auto=format&fit=crop" alt="Abstract art" />
+                </div>
+                <div class="card" data-index="3">
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop" alt="Abstract tech" />
+                </div>
+                <div class="card" data-index="4">
+                    <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop" alt="3D geometric render" />
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- ─── Section Divider ─── -->
+    <div class="section-divider"></div>
+
+    <!-- ─── Featured Recognition Section ─── -->
+    <div class="recognition-section">
+        <div class="recognition-label">Featured</div>
+
+        <div class="recognition-card">
+            <div class="recognition-content">
+                <div class="recognition-kicker">Recognition</div>
+                <h2 class="recognition-headline">
+                    Recognition<br />
+                    Worth Sharing.
+                </h2>
+                <div class="recognition-divider"></div>
+                <p class="recognition-desc">
+                    Recognition That Reflects The Trust We've<br />
+                    Earned Through Thoughtful Branding, Strategic<br />
+                    Creativity, And Meaningful Partnerships.
+                </p>
+                <a href="#" class="recognition-cta">
+                    Explore Article <span>&rarr;</span>
+                </a>
+            </div>
+
+            <div class="recognition-image">
+                <span class="recognition-img-label">i m g</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Section Divider ─── -->
+    <div class="section-divider"></div>
+
+    <!-- ─── JOURNAL GRID (new content) ─── -->
+    <div class="w-full max-w-[1200px] mx-auto px-4 bg-transparent">
+        <header class="mb-12 mt-4">
+            <p class="text-xs uppercase tracking-widest font-semibold mb-4 text-gray-600">The Journal</p>
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-4 leading-tight text-black">
+                Ideas That Build<br/>Better Brands.
+            </h1>
+            <p class="text-gray-600 text-lg">
+                Thoughts, Strategies And Stories From SDS Studio.
+            </p>
+        </header>
+
+        <!-- Navigation Filters -->
+        <nav class="mb-12 border-b border-gray-300 pb-4 overflow-x-auto whitespace-nowrap">
+            <ul class="flex space-x-8 text-sm uppercase tracking-wider font-semibold text-gray-800">
+                <li><a class="nav-link active" href="#">All</a></li>
+                <li><a class="nav-link hover:text-black transition-colors" href="#">Branding</a></li>
+                <li><a class="nav-link hover:text-black transition-colors" href="#">Strategy</a></li>
+                <li><a class="nav-link hover:text-black transition-colors" href="#">Identity</a></li>
+                <li><a class="nav-link hover:text-black transition-colors" href="#">Content</a></li>
+                <li><a class="nav-link hover:text-black transition-colors" href="#">Business</a></li>
+                <li><a class="nav-link hover:text-black transition-colors" href="#">Communication</a></li>
+            </ul>
+        </nav>
+
+        <!-- Article Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Article 01 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">01 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">May 12, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Why Strong Brands Make Weak Products Win.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="SDS branded black bag" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW7vdmT9j9CPN3g_p67oQ05X8UKI-Jm6CUqZVEiostshWI7z3mfWvZ7hwIRA9CO2woj2FFNhTAzHilGmP5CAHyR1bgSmKYI5pHfQ-aaiPZPLBofVWC5qUd4Tdrg85WAmL8VdaX8YLjDWL8I83el99YR9NTRUITwZ9aemQq-f_ruYHbH-hr98P7gKHiLFOdoFa78TDMoFPIuWarOjqYnYwlpfrQgrAgh6qIh4uBGK89sUiIYRyTMHU" />
+                </div>
+            </article>
+            <!-- Article 02 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">02 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">May 05, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">The Strategy Behind Memorable Branding.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Strategy First black notebook and pen" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaL67R79IQpM9pePrUmShAwHQoBlRqJ_R9zczXu_clAmortdjqFHCXjW4WsbmcUuzWr4u3a_3Lpfv5RRrFcRViTe21uqx4CD83Cq4ODWU9htrN875dR2xUOxMiwszdmqnkyrLhzfSFifKUuYUb7AeFyzHMjjs413r5vxNuAhqKl1oY7HNj3WS10BBPmNHEhLRVqHWPn9L3QyHNRpqos6NlZ0Qzvdy0YDIoMln2Sn1lM-Oamu7kwRY" />
+                </div>
+            </article>
+            <!-- Article 03 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">03 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 28, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Designing Identities That Stand The Test Of Time.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Minimalist black boxes" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHMgwIvvOPbYboUr_nDyoEtkRfF3YfE0aldC6GMWiLWl5HuHhGl67apb40AEWU9Sv9M5mzFTKiduMPcWJ7-FopJ6vPHsjokEti5XfYYXSZ85aS2J_qypfHt67b5Ma_rhDWwiQ0sCJz6ReXgk6L-23H10ltbhKYBNk-i0EbkBjKuRtT018mvJD6AlZTd4GaYzZb4kavRlAiNskgTYN1-GbAobam3dFR3dYswYsvZrPPKtCKB2p0eo" />
+                </div>
+            </article>
+            <!-- Article 04 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">04 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 21, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Content That Connects. Always.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Laptop displaying Content With Purpose" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuBO03IBPsNZgu14kp-BMQgX7bTUjDTzMZQUlnFJhXHpnE8NfcbUPLyZCDLQYDZ3Dg2M5YMr7_Cf-TKFX58_unCo3sT7aPGG4W3h3_zcfyR46R3AR2plwBxJdTwN8-OzdbdrtC2ZFhhPfII99Q2GqN1aps32qqkuYg6SLYI62KdyMmhYbMj5LCSEAPa4yN5aCVU5vXC3wL68nZcuvKUXRxk6El6Wz4banHZXirPDNfTrdiElRgi_w" />
+                </div>
+            </article>
+            <!-- Article 05 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">05 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 14, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">How We Turn Stories Into Brand Experiences.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Open book reading Story Creates Value" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJNT9HhXXOCwltjifiC6Wr7FFV3ZGUZ9nOq69DM2tmE1Nv4BqSNIB9fusaNtOlnU8bro1GNTb5hXRUxrPOF2i768znztxeE-TdJ1ECxZ7q8C9KnLC4o96iGNxipYemqShVtyKtgRUfg9pRhmtaz7yK36JKcrNNYwLpiOI7AlD2C5w9QLN8N4aRL1les9b3PTOETS0RMFRVHi0FFWu6oDkhH8Dcx9JEyaqbZHhL29P_YrGjU_RUdQU" />
+                </div>
+            </article>
+            <!-- Article 06 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">06 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 07, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">From Idea To Impact: Our Brand Process.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Diagram showing process steps" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCgptDYOzlFGihMgD9HdNVO1mL6nHh0axz7xJFURuWJg6OKkWj73Ktj-RAjGd_E_gNqENlNLMODvG-EIgz5ZsjJIt_h36SkfqTvPH0F-dAtiKGQgsS0I8DmSKjh3izA3UrbenZfaveu4T-5n48dx4bwy_vaFM4rXBteyNf_2CfgBKuoWuO7sTMEI3dVcQ9s2iAeODlMqKp0YPda9yXSy6RSweo4mn7HAcOOaWOg_hNrS---TS5v5o" />
+                </div>
+            </article>
+            <!-- Article 07 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">07 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 31, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">The Power Of Consistency Across Platforms.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Mobile phone showing app interface" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1qy6jBRALwahCKr1pzzGMlZyUharTcdd5pu30iY6jyNe_lmh_zbwdglmpKTTb2_eVFdJ9XbhcC4LUVQrWTblgakRApEfT02Rp__g8q1F335_eyq4Tv5geXiPhTzQ5zNZDWnajI3EaOvVpQb8v9GVN6QOzD-e7N6ADAazRfc3rKX8ezS-j_PtYFYnpRa4o0WyGW8zLgOP5QY_5POY2X2l_6IjTnxDSre2nRGwacJMBhZBPA7PKrS8" />
+                </div>
+            </article>
+            <!-- Article 08 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">08 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 24, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Building Brands People Don't Scroll Past.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Open black book with Make It Matter text" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbkdbzu5o4itnkvYHBlSzb4_piAjJaJBX5GmcylXyC-Jd1-ioksc6WtvKH-JUUX9gxwvL8iiP8rnZUtBsRf4Yme9r0GHZtLotntx-ucpkRdFz4iW9jjCAedkXLpSONw5h20dKqoYd8xgiZo_WOfDn9G_CjAa0FLrMBj_OBsCzT3hlkej2jFx2YKP9c2NY-GAlTprqydzzOtajR7p9MDkb3tt1JK7phpyL80bDe58ORukXAmx9R9Ms" />
+                </div>
+            </article>
+            <!-- Article 09 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">09 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 17, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Brand Positioning That Creates Real Differentiation.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Black card reading Positioning Creates Preference" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB18dxNYFKiBodIXMdsXd_J0Bg3PYhB1wspw7aFcPU6qopuFf3vc_t0v4dwxUvtNkcJNVoEc4oDBotztVPZuU-EBwBOvj9FdIGhl6OGfNSL6fbeeJlQnv5BSrty-xoRRQTUlc4a6DeGKl565vIB6GF3VZ1fXnEu4eE0HO82yzF2AcTVkU1skuFV9Q8ZIM5yYiPaNIigpOKGT5wfALwvMM0JUkfmEpgpH7uiX2PxfjBtlr3Ygsl-gYI" />
+                </div>
+            </article>
+            <!-- Article 10 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">10 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 10, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Creative That Drives Business Forward.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="White card on black reading Creative Drives Growth" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG-amgHur4YpcP0onlQ5g3dPPQ7F8H0Hnb2ISwpUKJOZgRQZW3w3jMzYP1xegmtwmGs5rb75yAK1CzJK7NAxKq7XEJYeO5Ymjzf1uhkMxog3Upha9GfVeVjMSJXvpAILYH5FqgTPrp0n2dng5afSrL5sFJigJFD9hXLbR77-4zQHTGeIXGrqei--xRl6WUfPUD1fjo2lDDt2t6pAHkY2H9C-noNHrhD-0TRqduPtFuhgpkNqi2wZ0" />
+                </div>
+            </article>
+            <!-- Article 11 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">11 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 03, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Packaging Is The First Brand Touchpoint.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="White box with SDS logo" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE14sHmHoy1H4cLd_iuARSqmhLUurwV2mUiJJlP9E4Qtlz6m7Odfow3lfbirlZNn5C81yg5s4J0yfmV1lwETXn3tWiKOYG8XcNc3f10QlPkZnOuI6Ckfvjf1xAwxnIWR5QNXodDd7gMMOhgH3dWpgPVZuyY-NaL1vwsRvNM06epu-Ue7OtpjBM7Ls8_F9n60RuIGoyVfY6IE5UvoKL03L0jD7G8jldcycEPq6hZqKQedUJ6AYgiRg" />
+                </div>
+            </article>
+            <!-- Article 12 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">12 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 25, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">The Role Of Typography In Brand Identity.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Typography layout showing letter A" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByea1HppiEaSTf1A26YdfmumzLdlBxUiFH-6uczKC2SZYeggeQ27txGCNh2TN5wT9jJMsdnCB5zLxVI6ef1AkLpydNY4tz0L99F_hwzTWBmDjxh_jveaYLDq9_ilHAahlbMr0pB5lkPfeH2YdX3MYNf5q-0UxYkFDHsyBgLvm_42--AeQLf3yCTM5Efh0KYCxikArZ3jaQjHLVifRRbE8JIuier1gw0Cxt_lmKPa3bdRhGtL1xDFw" />
+                </div>
+            </article>
+            <!-- Article 13 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">13 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 18, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Visual Systems That Scale With Your Brand.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Dark screen showing visual system grid" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPj200onDeVNNO9-5ZsaSA2CPslaXwD6S03CoW_Nrv7hPdNolHRxjN2sOGg-svnXsXG04lpfkQE4_RZXIWK2IcTsypVCDdjJf34tTzq5Y1TrtZ6cpWTHDdUmrwSm5A8mnzvyA2x-oGELIqi2Y7u70ErsYlF0YKUnTkVJRc5khrvS8VHi3Ewi5h_KmKrUylnQNqmZEagiFqbRY33sJbz5q14trBWWrzI6upp7G2I4eLea7i7o5xvT4" />
+                </div>
+            </article>
+            <!-- Article 14 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">14 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 11, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Measuring What Matters In Branding.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Dark dashboard showing metrics" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8-kwpT4iGqi4it7fcZw2YF8y8t40dpnwkyv2WaWAFt0lban0xINQGjaTGmtlTdcPj2cyVnN2zLS6QUIgBXU8ZUmngdLe4PCYtwsKKTfgrONtpXdZ9AshH1vB9lQz0AWTDdpFEo6Qj-aCkwfuve81aBKQTwE00RBE7qjsjkmWNLrYeAnBhr5uOFVY-Q01fmZjq_BxZuu24KF_jwquWxZjFJJZALMlKye9UswiupedM_d74zort8Y" />
+                </div>
+            </article>
+            <!-- Article 15 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">15 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 04, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Branding For The Future, Not Just Today.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Abstract sphere with text Future Ready Brands" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACMhDrCbbgTxXx8AFIBlRQR-WdKEPYsFOFQYKOwc1aUzBNPK-1NOMxdcvm-zAYfhoMqlxVWIPXamh0TTehyLKJ1aBCkzMPhdnlfvu6FV8y8sNHT4MrHHTEyzdF7TRTezAOoHRDUmUgmd73UX0eZYhnIq4ZSrxK8JObvYJLVtg9qN297tt4lSEymdwbFfCEGSafvtHuGekxhk67Y3IhMhJIoByv28G_TGahbJiCoDdCvokEguJnQPc" />
+                </div>
+            </article>
+            <!-- Article 16 -->
+            <article class="article-card flex flex-col sm:flex-row bg-white">
+                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
+                    <div>
+                        <span class="text-xl font-light text-gray-400 mb-2 block">16 <span class="text-sm">-</span></span>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Jan 28, 2024</p>
+                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Why Simplicity Always Wins.</h2>
+                    </div>
+                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
+                </div>
+                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
+                    <img alt="Minimalist black chair in an empty room" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUzqOCv3HyIb3AL-05MR8MaXrjxM6usVef9QXAYQlhJ-T4He0cBfMYIwXco3VokffIz5exbpaJcaRGs7St231Jg66T5VRgBGqdtHAx0HV542Krq1LwktRAFoIjco0noyFr76eYKqpkW8JWntxGs5tTRVG7E9L0swEE94crTbbTHMngVhLKVe18oQfD2nuNlSwZNqY1hOXmOi6mmNWxaQlDcfVMr5j1uP2cs5DT8qzN-RnnrE5XzPM" />
+                </div>
+            </article>
+        </section>
+    </div>
+
+    <!-- ─── Carousel Script ─── -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            const wrapper = document.getElementById('carousel');
+            let activeIndex = 2;
+            let isAnimating = false;
+            let autoPlayInterval;
+
+            const ANIMATION_SPEED = 700;
+            const AUTOPLAY_DELAY = 1800;
+
+            function updateCards() {
+                cards.forEach((card, i) => {
+                    let diff = (i - activeIndex) % 5;
+                    if (diff < -2) diff += 5;
+                    if (diff > 2) diff -= 5;
+
+                    card.className = 'card';
+
+                    if (diff === 0) card.classList.add('pos-0');
+                    else if (diff === -1) card.classList.add('pos-m1');
+                    else if (diff === 1) card.classList.add('pos-p1');
+                    else if (diff === -2) card.classList.add('pos-m2');
+                    else if (diff === 2) card.classList.add('pos-p2');
+                });
+            }
+
+            function navigate(direction) {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                if (direction === 'next') activeIndex++;
+                else activeIndex--;
+
+                updateCards();
+                resetAutoPlay();
+
+                setTimeout(() => {
+                    isAnimating = false;
+                }, ANIMATION_SPEED);
+            }
+
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(() => {
+                    navigate('next');
+                }, AUTOPLAY_DELAY);
+            }
+
+            function resetAutoPlay() {
+                clearInterval(autoPlayInterval);
+                startAutoPlay();
+            }
+
+            updateCards();
+            startAutoPlay();
+
+            wrapper.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+            wrapper.addEventListener('mouseleave', startAutoPlay);
+            wrapper.addEventListener('touchstart', () => clearInterval(autoPlayInterval), { passive: true });
+            wrapper.addEventListener('touchend', startAutoPlay, { passive: true });
+
+            cards.forEach((card, i) => {
+                card.addEventListener('click', () => {
+                    if (isAnimating) return;
+                    let diff = (i - activeIndex) % 5;
+                    if (diff < -2) diff += 5;
+                    if (diff > 2) diff -= 5;
+
+                    if (diff === 1 || diff === -4) navigate('next');
+                    else if (diff === -1 || diff === 4) navigate('prev');
+                });
+            });
+
+            window.addEventListener('wheel', (e) => {
+                if (isAnimating) return;
+                if (Math.abs(e.deltaY) > 40 || Math.abs(e.deltaX) > 40) {
+                    if (e.deltaY > 0 || e.deltaX > 0) navigate('next');
+                    else navigate('prev');
+                }
+            }, { passive: true });
+
+            let touchStartX = 0;
+            window.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+                let touchEndX = e.changedTouches[0].screenX;
+                if (touchStartX - touchEndX > 40) navigate('next');
+                else if (touchEndX - touchStartX > 40) navigate('prev');
+            }, { passive: true });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate('next');
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate('prev');
+            });
+        });
+    </script>
+
+</body>
+</html>
