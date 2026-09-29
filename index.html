@@ -1,847 +1,725 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sandy Design Studio · Journal</title>
-    <!-- Tailwind + additional fonts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-        }
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
+  <title>KrisJoe Buildteck - Building Safe. Smart. Sustainable Spaces.</title>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #dbdbdb;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-        .font-serif-italic {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-weight: 400;
-        }
+  <!-- Lenis Smooth Scroll CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
-        .font-serif {
-            font-family: 'Playfair Display', Georgia, serif;
-        }
-
-        /* ── Chevron pattern ── */
-        .pattern-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 140px;
-            display: flex;
-            z-index: 0;
-            opacity: 0.8;
-            pointer-events: none;
-        }
-
-        .pattern-left {
-            flex: 1;
-            height: 100%;
-            background-image: repeating-linear-gradient(
-                115deg,
-                transparent,
-                transparent 45px,
-                rgba(255, 255, 255, 0.9) 45px,
-                rgba(255, 255, 255, 0.9) 46px
-            );
-            background-position: bottom right;
-        }
-
-        .pattern-right {
-            flex: 1;
-            height: 100%;
-            background-image: repeating-linear-gradient(
-                -115deg,
-                transparent,
-                transparent 45px,
-                rgba(255, 255, 255, 0.9) 45px,
-                rgba(255, 255, 255, 0.9) 46px
-            );
-            background-position: bottom left;
-        }
-
-        /* ── 3D Carousel ── */
-        .perspective-wrapper {
-            perspective: 1200px;
-            transform-style: preserve-3d;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            height: 380px;
-            z-index: 10;
-            touch-action: pan-y;
-        }
-
-        .card {
-            background-color: #878787;
-            border-radius: 16px;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        box-shadow 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-            display: block;
-            transform: translateZ(1px);
-        }
-
-        .pos-0 {
-            width: 260px;
-            height: 340px;
-            transform: translate(-50%, -50%) translateZ(0);
-            z-index: 5;
-            opacity: 1;
-            box-shadow: 0 40px 80px -10px rgba(0, 0, 0, 0.45),
-                        0 0 0 1px rgba(255, 255, 255, 0.2),
-                        inset 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-
-        .pos-m1 {
-            width: 240px;
-            height: 310px;
-            transform: translate(-50%, -50%) translateX(-264px) rotateY(12deg) rotateZ(-2deg) translateZ(-40px);
-            z-index: 4;
-            opacity: 0.5;
-        }
-
-        .pos-p1 {
-            width: 240px;
-            height: 310px;
-            transform: translate(-50%, -50%) translateX(264px) rotateY(-12deg) rotateZ(2deg) translateZ(-40px);
-            z-index: 4;
-            opacity: 0.5;
-        }
-
-        .pos-m2 {
-            width: 220px;
-            height: 280px;
-            transform: translate(-50%, -50%) translateX(-503px) rotateY(22deg) rotateZ(-4deg) translateZ(-90px);
-            z-index: 3;
-            opacity: 0.25;
-        }
-
-        .pos-p2 {
-            width: 220px;
-            height: 280px;
-            transform: translate(-50%, -50%) translateX(503px) rotateY(-22deg) rotateZ(4deg) translateZ(-90px);
-            z-index: 3;
-            opacity: 0.25;
-        }
-
-        /* ── Featured Recognition (new section) ── */
-        .recognition-section {
-            width: 100%;
-            max-width: 1100px;
-            margin-top: 120px;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .recognition-label {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.6em;
-            text-transform: uppercase;
-            color: #111111;
-            text-align: center;
-            margin-bottom: 32px;
-            opacity: 0.6;
-        }
-
-        .recognition-card {
-            background: #ffffff;
-            border-radius: 28px;
-            height: 580px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.06);
-            display: flex;
-        }
-
-        .recognition-content {
-            flex: 0 0 50%;
-            padding: 88px 64px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            position: relative;
-            z-index: 10;
-        }
-
-        .recognition-kicker {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: #111111;
-            margin-bottom: 24px;
-            opacity: 0.45;
-        }
-
-        .recognition-headline {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: 56px;
-            font-weight: 600;
-            line-height: 1.06;
-            color: #111111;
-            margin-bottom: 22px;
-            letter-spacing: -0.02em;
-        }
-
-        .recognition-divider {
-            width: 52px;
-            height: 4px;
-            background: #2b4ed3;
-            margin-bottom: 26px;
-            border-radius: 2px;
-        }
-
-        .recognition-desc {
-            font-size: 13px;
-            line-height: 2;
-            color: #777777;
-            font-weight: 400;
-            max-width: 340px;
-            margin-bottom: 52px;
-        }
-
-        .recognition-cta {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: #111111;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            padding-bottom: 6px;
-            border-bottom: 3px solid #2b4ed3;
-            align-self: flex-start;
-            transition: opacity 0.2s ease;
-        }
-
-        .recognition-cta:hover {
-            opacity: 0.55;
-        }
-
-        .recognition-cta span {
-            margin-left: 8px;
-            font-size: 18px;
-        }
-
-        .recognition-image {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 58%;
-            background-color: #6b6b6b;
-            clip-path: polygon(14% 0, 100% 0, 100% 100%, 0% 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-            background-image: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&auto=format&fit=crop&q=80');
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.5s ease;
-        }
-
-        .recognition-image:hover {
-            transform: scale(1.015);
-        }
-
-        .recognition-image::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.10);
-            z-index: 1;
-        }
-
-        .recognition-img-label {
-            position: relative;
-            z-index: 2;
-            color: #fff;
-            font-size: 13px;
-            letter-spacing: 0.5em;
-            font-weight: 500;
-            opacity: 0.8;
-            text-transform: uppercase;
-        }
-
-        /* ── Section divider line ── */
-        .section-divider {
-            width: 100%;
-            max-width: 1100px;
-            height: 1px;
-            background: rgba(0, 0, 0, 0.1);
-            margin: 80px 0 20px 0;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 1100px) {
-            .perspective-wrapper {
-                transform: scale(0.85);
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#E87D24',
+              orangeHover: '#d16a16',
+              darkNavy: '#0F1A24',
+              navySlate: '#13212E',
+              midnight: '#0B131B',
+              charcoal: '#1B2733',
+              subtleGray: '#7E8B9B',
+              lightGray: '#F5F6F8',
+              cardBg: '#152535',
             }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            serifAccent: ['"Playfair Display"', 'Georgia', 'serif'],
+          }
         }
-        @media (max-width: 900px) {
-            .perspective-wrapper {
-                transform: scale(0.65);
-            }
-        }
-        @media (max-width: 820px) {
-            .recognition-card {
-                height: auto;
-                flex-direction: column;
-                border-radius: 24px;
-            }
-            .recognition-content {
-                flex: 1;
-                padding: 52px 36px 40px;
-            }
-            .recognition-image {
-                position: relative;
-                width: 100%;
-                height: 300px;
-                clip-path: none;
-                border-radius: 0 0 24px 24px;
-            }
-            .recognition-headline {
-                font-size: 42px;
-            }
-            .recognition-desc {
-                max-width: 100%;
-            }
-            .recognition-section {
-                margin-top: 80px;
-            }
-        }
-        @media (max-width: 600px) {
-            .perspective-wrapper {
-                transform: scale(0.45);
-            }
-        }
-        @media (max-width: 480px) {
-            .recognition-content {
-                padding: 36px 24px 32px;
-            }
-            .recognition-headline {
-                font-size: 32px;
-            }
-            .recognition-desc {
-                font-size: 11.5px;
-            }
-            .recognition-image {
-                height: 220px;
-            }
-            .recognition-section {
-                margin-top: 60px;
-            }
-            .section-divider {
-                margin: 50px 0 10px 0;
-            }
-        }
+      }
+    }
+  </script>
 
-        /* Journal grid extras */
-        .article-card {
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
-        }
-        .article-image-container {
-            background-color: #f3f4f6;
-        }
-        .nav-link {
-            position: relative;
-            padding-bottom: 0.25rem;
-        }
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-color: black;
-        }
-    </style>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* Prevent micro-overflow / jitter during transforms */
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+    .lenis.lenis-scrolling iframe {
+      pointer-events: none;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-accent {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .custom-backdrop-gradient {
+      background: linear-gradient(90deg, #0F1A24 0%, rgba(15, 26, 36, 0.95) 45%, rgba(15, 26, 36, 0.4) 100%);
+    }
+
+    .cta-banner-gradient {
+      background: linear-gradient(90deg, #0F1A24 0%, rgba(15, 26, 36, 0.92) 55%, rgba(15, 26, 36, 0.5) 100%);
+    }
+
+    @media (max-width: 1024px) {
+      .custom-backdrop-gradient, .cta-banner-gradient {
+        background: linear-gradient(180deg, rgba(15, 26, 36, 0.93) 0%, rgba(15, 26, 36, 0.88) 50%, rgba(15, 26, 36, 0.97) 100%);
+      }
+    }
+
+    /* =========================================================
+        SCROLL-BY-SCROLL REPEATABLE REVEAL & SLIDE-UP ANIMATION
+       ========================================================= */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(48px) translateZ(0);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+    }
+
+    .scroll-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) translateZ(0);
+    }
+
+    /* Sequential Stagger Delays */
+    .delay-1 { transition-delay: 100ms; }
+    .delay-2 { transition-delay: 200ms; }
+    .delay-3 { transition-delay: 300ms; }
+    .delay-4 { transition-delay: 400ms; }
+    .delay-5 { transition-delay: 500ms; }
+    .delay-6 { transition-delay: 600ms; }
+
+    /* Top Reading Progress Bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: #E87D24;
+      width: 0%;
+      z-index: 100;
+      transition: width 0.1s ease-out;
+    }
+
+    /* Reduced Motion Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
-<body>
 
-    <!-- ─── Chevron Pattern ─── -->
-    <div class="pattern-container">
-        <div class="pattern-left"></div>
-        <div class="pattern-right"></div>
-    </div>
+<body class="font-sans antialiased text-gray-800 bg-[#F8F9FA] selection:bg-brand-orange selection:text-white">
 
-    <!-- ─── Main Content ─── -->
-    <div class="w-full max-w-[1200px] mx-auto px-4 flex flex-col items-center relative z-10">
+<!-- Top Progress Indicator -->
+<div id="scroll-progress"></div>
 
-        <!-- Header -->
-        <header class="text-center w-full mb-14">
-            <h1 class="text-[#0a0a0a] m-0 p-0 flex flex-col items-center">
-                <span class="text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] tracking-tight leading-[1.1] font-medium">
-                    Ideas that move
-                </span>
-                <span class="font-serif-italic text-[4rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[0.85] tracking-normal -mt-2">
-                    brands forward
-                </span>
-            </h1>
-
-            <p class="mt-8 text-[15px] md:text-[17px] text-[#111111] max-w-md mx-auto font-normal leading-snug">
-                Insights, Strategies, And Creative Thinking From<br />
-                The Team Behind Sandy Design Studio.
-            </p>
-
-            <button class="mt-8 bg-[#1f242d] text-white px-6 py-2.5 rounded-full font-medium text-[15px] inline-flex items-center justify-center hover:bg-black transition-colors">
-                Explore Articles
-                <svg class="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-            </button>
-        </header>
-
-        <!-- Carousel -->
-        <main class="w-full">
-            <div class="perspective-wrapper" id="carousel">
-                <div class="card" data-index="0">
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" alt="Abstract liquid design" />
-                </div>
-                <div class="card" data-index="1">
-                    <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=600&auto=format&fit=crop" alt="Abstract shapes" />
-                </div>
-                <div class="card" data-index="2">
-                    <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=600&auto=format&fit=crop" alt="Abstract art" />
-                </div>
-                <div class="card" data-index="3">
-                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop" alt="Abstract tech" />
-                </div>
-                <div class="card" data-index="4">
-                    <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop" alt="3D geometric render" />
-                </div>
+<!-- BEGIN: NavigationBar -->
+<header class="w-full bg-white sticky top-0 z-50 transition-all border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+    <!-- Brand Logo -->
+    <a class="flex flex-col select-none group" data-purpose="site-brand-logo" href="#">
+      <span class="text-2xl font-black tracking-tight text-black leading-none flex items-center">
+        <span class="text-brand-orange">KRIS</span>JOE
+      </span>
+      <span class="text-[10px] font-extrabold tracking-[0.28em] text-black mt-1 leading-none">
+        BUILDTECK
+      </span>
+    </a>
+    <!-- Navigation Links -->
+    <nav class="hidden md:flex items-center space-x-9 text-sm font-semibold text-gray-700" data-purpose="main-navigation">
+      <a class="text-black transition-colors hover:text-brand-orange" href="buildtech.html">Home</a>
+      <a class="hover:text-brand-orange transition-colors" href="aboutusbuildtek.html">About</a>
+      <div class="relative group">
+        <div class="relative group">
+          <button class="flex items-center gap-1.5 hover:text-brand-orange transition-colors py-2 focus:outline-none">
+            <a href="services.html" class="hover:text-brand-orange transition-colors">Services</a>
+            <svg class="w-3.5 h-3.5 text-gray-500 group-hover:text-brand-orange transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+          <!-- Services Dropdown -->
+          <div class="absolute left-1/2 top-full z-50 w-64 -translate-x-1/2 pt-3 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-2">
+              <a href="Construction.html" class="block px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a00] transition-colors">Construction</a>
+              <a href="Interiors.html" class="block px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a00] transition-colors">Interiors</a>
+              <a href="Residential Developments.html" class="block px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a00] transition-colors">Residential Developments</a>
+              <a href="Fire_Doors.html" class="block px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a00] transition-colors">Fire Doors</a>
+              <a href="Passive Fire Protection.html" class="block px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-orange-50 hover:text-[#ff5a00] transition-colors">Fire Protection</a>
             </div>
-        </main>
-
-    </div>
-
-    <!-- ─── Section Divider ─── -->
-    <div class="section-divider"></div>
-
-    <!-- ─── Featured Recognition Section ─── -->
-    <div class="recognition-section">
-        <div class="recognition-label">Featured</div>
-
-        <div class="recognition-card">
-            <div class="recognition-content">
-                <div class="recognition-kicker">Recognition</div>
-                <h2 class="recognition-headline">
-                    Recognition<br />
-                    Worth Sharing.
-                </h2>
-                <div class="recognition-divider"></div>
-                <p class="recognition-desc">
-                    Recognition That Reflects The Trust We've<br />
-                    Earned Through Thoughtful Branding, Strategic<br />
-                    Creativity, And Meaningful Partnerships.
-                </p>
-                <a href="#" class="recognition-cta">
-                    Explore Article <span>&rarr;</span>
-                </a>
-            </div>
-
-            <div class="recognition-image">
-                <span class="recognition-img-label">i m g</span>
-            </div>
+          </div>
         </div>
+      </div>
+      <a class="hover:text-brand-orange transition-colors" href="projects.html">Projects</a>
+      <a class="hover:text-brand-orange transition-colors" href="contact.html">Contact</a>
+    </nav>
+    <!-- Right Header Actions (CTA & Mobile Toggle) -->
+    <div class="flex items-center gap-3">
+      <a class="hidden sm:inline-flex items-center gap-2 bg-[#ff5a00] hover:bg-[#ea5200] text-white text-sm font-semibold px-6 py-2.5 rounded-full shadow-sm hover:shadow transition-all duration-200" href="https://wa.me/916361725590?text=Hello,%20I%20would%20like%20to%20get%20a%20quote%20for%20Passive%20Fire%20Protection." target="_blank" rel="noopener noreferrer">
+        <span>Get a Quote</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="mobile-menu-btn" class="md:hidden text-gray-700 hover:text-black focus:outline-none p-2" aria-label="Toggle Navigation">
+        <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M4 6h16M4 12h16m-7 6h7" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Navigation -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-6 py-5 shadow-lg">
+    <div class="flex flex-col space-y-4 text-sm font-semibold text-gray-700">
+      <a class="text-black hover:text-[#ff5a00] py-1" href="buildtech.html" onclick="toggleMobileMenu()">Home</a>
+      <a class="hover:text-[#ff5a00] py-1" href="aboutusbuildtek.html" onclick="toggleMobileMenu()">About</a>
+      <a class="hover:text-[#ff5a00] py-1" href="services.html" onclick="toggleMobileMenu()">Services</a>
+      <div class="pl-4 flex flex-col space-y-2 border-l-2 border-gray-100 text-xs font-medium text-gray-600">
+        <a href="Construction.html" class="hover:text-[#ff5a00]" onclick="toggleMobileMenu()">Construction</a>
+        <a href="Interiors.html" class="hover:text-[#ff5a00]" onclick="toggleMobileMenu()">Interiors</a>
+        <a href="Residential Developments.html" class="hover:text-[#ff5a00]" onclick="toggleMobileMenu()">Residential Developments</a>
+        <a href="Fire_Doors.html" class="hover:text-[#ff5a00]" onclick="toggleMobileMenu()">Fire Doors</a>
+        <a href="Passive Fire Protection.html" class="hover:text-[#ff5a00]" onclick="toggleMobileMenu()">Fire Protection</a>
+      </div>
+      <a class="hover:text-[#ff5a00] py-1" href="projects.html" onclick="toggleMobileMenu()">Projects</a>
+      <a class="hover:text-[#ff5a00] py-1" href="contact.html" onclick="toggleMobileMenu()">Contact</a>
+      <a class="inline-flex justify-center items-center gap-2 bg-[#ff5a00] text-white text-xs font-semibold py-3 rounded-full mt-2 shadow-sm" href="https://wa.me/916361725590?text=Hello,%20I%20would%20like%20to%20get%20a%20quote%20for%20Passive%20Fire%20Protection." target="_blank" rel="noopener noreferrer">
+        <span>Get a Quote</span>
+      </a>
+    </div>
+  </div>
+</header>
+<!-- END: NavigationBar -->
+
+<!-- BEGIN: HeroSection (01 About KrisJoe Buildteck) -->
+<section class="relative bg-brand-darkNavy text-white overflow-hidden min-h-[580px] lg:min-h-[660px] flex items-center" id="home">
+  <!-- Right side background architectural image -->
+  <div class="absolute inset-y-0 right-0 w-full lg:w-3/5 z-0 scroll-reveal">
+    <img alt="Modern Architectural Building with Warm Illumination" class="w-full h-full object-cover object-center brightness-95 contrast-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoLYsGRb3EZ7W4vQBg4Jz9SBl1Qxj110gPdc5G435g8jymmgGlykrqSIfe8_NOZVhvcD1Hd0TI0RpUN8-VOVMWW3OlSzll3uKqqf3ylz6QwtS1ithKwTxxz97tW5S_inbW613aYJ8Z_5aEZ6xWjWeHFNGQAsyXY0q2rr8llm0g3GFc8jermrP7_XOZtBv-faqDZNDE4fmsbBck0RGLGd50cWkM9NLEYJsGRCNU9vjwlNaSCeQUOYGd"/>
+    <div class="absolute inset-0 custom-backdrop-gradient"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-16 lg:py-24">
+    <div class="max-w-2xl">
+      <!-- Section Tag -->
+      <div class="scroll-reveal flex items-center space-x-3 mb-6">
+        <span class="text-brand-orange font-bold text-xs tracking-wider">01</span>
+        <div class="w-8 h-[1.5px] bg-brand-orange"></div>
+        <span class="text-xs font-semibold uppercase tracking-widest text-gray-300">About Krisjoe Buildteck</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="scroll-reveal delay-1 text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.15] tracking-tight mb-6">
+        Building<br/>
+        Safe. Smart.<br/>
+        <span class="font-accent text-brand-orange font-normal">Sustainable</span> Spaces.
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="scroll-reveal delay-2 text-gray-300 text-base sm:text-lg font-normal leading-relaxed mb-10 max-w-lg">
+        25+ years of industry expertise in construction, fire protection and interior solutions.
+      </p>
+
+      <!-- Down Action: Our Story -->
+      <div class="scroll-reveal delay-3">
+        <a class="inline-flex items-center space-x-3.5 text-xs font-bold uppercase tracking-widest text-white group cursor-pointer" href="#about">
+          <div class="w-10 h-10 rounded-full border border-gray-500/60 flex items-center justify-center group-hover:border-brand-orange group-hover:bg-brand-orange/10 transition-colors">
+            <svg class="w-4 h-4 text-brand-orange group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <span class="group-hover:text-brand-orange transition-colors">Our Story</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side Vertical Brand Pillars -->
+  <div class="scroll-reveal delay-4 hidden xl:flex absolute right-12 top-1/2 -translate-y-1/2 z-20 flex-col items-center space-y-4">
+    <div class="w-[1.5px] h-14 bg-brand-orange"></div>
+    <div class="text-[10px] uppercase font-bold tracking-[0.25em] text-gray-200/90 leading-loose text-center max-w-[120px]">
+      People<br/>Spaces<br/>Communities<br/>A Stronger<br/>Tomorrow
+    </div>
+  </div>
+</section>
+<!-- END: HeroSection -->
+
+<!-- BEGIN: WhoWeAreSection (02) -->
+<section class="py-20 lg:py-28 bg-[#FFFFFF] border-b border-gray-100" id="about">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+      
+      <!-- Left Column: Intro & Story -->
+      <div class="lg:col-span-5 pr-0 lg:pr-6">
+        <div class="scroll-reveal flex items-center space-x-3 mb-6">
+          <span class="text-brand-orange font-bold text-xs tracking-wider">02</span>
+          <div class="w-8 h-[1.5px] bg-brand-orange"></div>
+          <span class="text-xs font-semibold uppercase tracking-widest text-gray-500">Who We Are</span>
+        </div>
+        
+        <h2 class="scroll-reveal delay-1 text-3xl sm:text-4xl lg:text-[44px] font-bold text-gray-900 leading-[1.18] mb-6">
+          More Than Structures.<br/>
+          We Build <span class="font-accent text-brand-orange font-normal">What Lasts.</span>
+        </h2>
+        
+        <p class="scroll-reveal delay-2 text-gray-600 text-sm sm:text-base leading-relaxed mb-8">
+          KrisJoe Buildteck is built on 25+ years of industry expertise in construction, fire protection and interior solutions. From concept to completion, we deliver reliable, sustainable and future-ready solutions for residential, commercial and interior projects.
+        </p>
+
+        <div class="scroll-reveal delay-3">
+          <a class="inline-flex items-center space-x-3.5 group cursor-pointer" href="#services">
+            <div class="w-11 h-11 rounded-full bg-brand-orange text-white flex items-center justify-center group-hover:bg-brand-orangeHover transition-colors shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-xs font-bold tracking-widest uppercase text-gray-900 group-hover:text-brand-orange transition-colors">Learn More</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Center Column: Vertical Architectural Photography -->
+      <div class="lg:col-span-4 flex justify-center">
+        <div class="scroll-reveal delay-2 relative w-full h-[360px] sm:h-[480px] rounded-sm overflow-hidden shadow-sm">
+          <img alt="Vertical architectural stone and timber facade" class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700 ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5OCxhkkPG20G9xl3ucVHLU4hDG8WrFG0w7z4oqPDJx2NEzuhM69gtLp5CDxyCUtWg3UmN_rMvnX0d1iGgnPoXSg7NrKx_Am7pYinQyigo4EyhV6leuom9PZaPi9x-0v2V1TQ2gpY-ToquGZy61Rccqlsil5ss9IFTy1fuYzVU5vMzS_KGzjQSdVq9lUkjDmwUDTbvw4mY-kJjX5e-6j-gmSeZbnyEv5bkcTccMwG_WyWv9UcxFZyB"/>
+        </div>
+      </div>
+
+      <!-- Right Column: Stats & Experience Details -->
+      <div class="lg:col-span-3 flex flex-col justify-between space-y-8 lg:space-y-6">
+        <!-- Stat Counter -->
+        <div class="scroll-reveal delay-1">
+          <div class="text-5xl sm:text-6xl font-extrabold text-brand-orange tracking-tight mb-2">
+            25<span class="text-4xl sm:text-5xl font-bold">+</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 leading-snug">
+            Years of<br/>Industry Experience
+          </h3>
+        </div>
+
+        <!-- Vertical Divider line & Categories -->
+        <div class="scroll-reveal delay-2 border-t border-gray-200 pt-6">
+          <div class="space-y-2 text-xs font-bold tracking-widest text-gray-800 uppercase leading-relaxed">
+            <div>Construction</div>
+            <div>Fire Protection</div>
+            <div>Interiors</div>
+          </div>
+        </div>
+
+        <!-- Bottom Textured Box -->
+        <div class="scroll-reveal delay-3 relative bg-gray-100 p-6 overflow-hidden border-l-2 border-brand-orange">
+          <div class="text-xs font-bold tracking-wider text-gray-800 uppercase leading-relaxed relative z-10">
+            Built on Trust.<br/>Driven by<br/>Excellence.
+          </div>
+          <div class="absolute inset-0 opacity-10 bg-repeat bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:8px_8px]"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- END: WhoWeAreSection -->
+
+<!-- BEGIN: CoreStrengthsSection (03) -->
+<section class="py-20 lg:py-24 bg-brand-darkNavy text-white relative" id="services">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+      <div class="scroll-reveal">
+        <div class="flex items-center space-x-3 mb-4">
+          <span class="text-brand-orange font-bold text-xs tracking-wider">03</span>
+          <div class="w-8 h-[1.5px] bg-brand-orange"></div>
+          <span class="text-xs font-semibold uppercase tracking-widest text-gray-400">Our Core Strengths</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-[44px] font-bold text-white tracking-tight leading-tight">
+          Expertise<br/>That Delivers <span class="font-accent text-brand-orange font-normal">Real Value.</span>
+        </h2>
+      </div>
+
+      <div class="scroll-reveal delay-1">
+        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 block md:text-right">
+          Integrated Solutions<br/>For a Safer Tomorrow
+        </span>
+      </div>
     </div>
 
-    <!-- ─── Section Divider ─── -->
-    <div class="section-divider"></div>
+    <!-- 6-Column Feature Grid with Sequential Stagger -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 pt-4">
+      
+      <!-- Feature 1 -->
+      <div class="scroll-reveal delay-1 flex flex-col p-4 sm:p-0 rounded-lg hover:bg-white/5 lg:hover:bg-transparent transition-colors">
+        <div class="w-10 h-10 mb-5 text-brand-orange">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M9.879 16.121A3 3 0 1012.015 11L11 14H9.9z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h4 class="text-sm font-bold text-white mb-2 leading-snug">Passive Fire<br/>Protection</h4>
+        <p class="text-xs text-gray-400 leading-relaxed">Specialized expertise in passive fire protection solutions.</p>
+      </div>
 
-    <!-- ─── JOURNAL GRID (new content) ─── -->
-    <div class="w-full max-w-[1200px] mx-auto px-4 bg-transparent">
-        <header class="mb-12 mt-4">
-            <p class="text-xs uppercase tracking-widest font-semibold mb-4 text-gray-600">The Journal</p>
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-4 leading-tight text-black">
-                Ideas That Build<br/>Better Brands.
-            </h1>
-            <p class="text-gray-600 text-lg">
-                Thoughts, Strategies And Stories From SDS Studio.
+      <!-- Feature 2 -->
+      <div class="scroll-reveal delay-2 flex flex-col p-4 sm:p-0 rounded-lg hover:bg-white/5 lg:hover:bg-transparent transition-colors">
+        <div class="w-10 h-10 mb-5 text-brand-orange">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h4 class="text-sm font-bold text-white mb-2 leading-snug">End-to-End<br/>Solutions</h4>
+        <p class="text-xs text-gray-400 leading-relaxed">Complete solutions across construction and interiors.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="scroll-reveal delay-3 flex flex-col p-4 sm:p-0 rounded-lg hover:bg-white/5 lg:hover:bg-transparent transition-colors">
+        <div class="w-10 h-10 mb-5 text-brand-orange">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h4 class="text-sm font-bold text-white mb-2 leading-snug">Experienced<br/>Team</h4>
+        <p class="text-xs text-gray-400 leading-relaxed">Skilled professionals and technicians.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="scroll-reveal delay-4 flex flex-col p-4 sm:p-0 rounded-lg hover:bg-white/5 lg:hover:bg-transparent transition-colors">
+        <div class="w-10 h-10 mb-5 text-brand-orange">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h4 class="text-sm font-bold text-white mb-2 leading-snug">Quality<br/>Materials</h4>
+        <p class="text-xs text-gray-400 leading-relaxed">Quality materials from trusted brands.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="scroll-reveal delay-5 flex flex-col p-4 sm:p-0 rounded-lg hover:bg-white/5 lg:hover:bg-transparent transition-colors">
+        <div class="w-10 h-10 mb-5 text-brand-orange">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h4 class="text-sm font-bold text-white mb-2 leading-snug">Safety &amp;<br/>Compliance</h4>
+        <p class="text-xs text-gray-400 leading-relaxed">Safety-focused execution and regulatory compliance.</p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="scroll-reveal delay-6 flex flex-col p-4 sm:p-0 rounded-lg hover:bg-white/5 lg:hover:bg-transparent transition-colors">
+        <div class="w-10 h-10 mb-5 text-brand-orange">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <h4 class="text-sm font-bold text-white mb-2 leading-snug">On-Time<br/>Delivery</h4>
+        <p class="text-xs text-gray-400 leading-relaxed">Transparent processes and commitment to timely delivery.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- END: CoreStrengthsSection -->
+
+<!-- BEGIN: OurValuesSection (04) -->
+<section class="py-20 lg:py-28 bg-[#FFFFFF]" id="values">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+      
+      <!-- Left Side: Values Header & 4 Value Pillars -->
+      <div class="lg:col-span-8 flex flex-col justify-between">
+        <div>
+          <div class="scroll-reveal flex items-center space-x-3 mb-6">
+            <span class="text-brand-orange font-bold text-xs tracking-wider">04</span>
+            <div class="w-8 h-[1.5px] bg-brand-orange"></div>
+            <span class="text-xs font-semibold uppercase tracking-widest text-gray-500">Our Values</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start mb-16">
+            <h2 class="scroll-reveal delay-1 md:col-span-7 text-3xl sm:text-4xl lg:text-[44px] font-bold text-gray-900 leading-tight">
+              Four Principles.<br/>
+              <span class="font-accent text-brand-orange font-normal">One Standard.</span>
+            </h2>
+            <p class="scroll-reveal delay-2 md:col-span-5 text-gray-500 text-sm leading-relaxed pt-2">
+              Our values guide everything we do, from the way we work to the relationships we build.
             </p>
-        </header>
+          </div>
+        </div>
 
-        <!-- Navigation Filters -->
-        <nav class="mb-12 border-b border-gray-300 pb-4 overflow-x-auto whitespace-nowrap">
-            <ul class="flex space-x-8 text-sm uppercase tracking-wider font-semibold text-gray-800">
-                <li><a class="nav-link active" href="#">All</a></li>
-                <li><a class="nav-link hover:text-black transition-colors" href="#">Branding</a></li>
-                <li><a class="nav-link hover:text-black transition-colors" href="#">Strategy</a></li>
-                <li><a class="nav-link hover:text-black transition-colors" href="#">Identity</a></li>
-                <li><a class="nav-link hover:text-black transition-colors" href="#">Content</a></li>
-                <li><a class="nav-link hover:text-black transition-colors" href="#">Business</a></li>
-                <li><a class="nav-link hover:text-black transition-colors" href="#">Communication</a></li>
-            </ul>
-        </nav>
+        <!-- 4 Principles Cards Row -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4 border-t border-gray-100">
+          
+          <div class="scroll-reveal delay-1 flex flex-col">
+            <span class="text-xs font-bold text-gray-400 mb-3">01</span>
+            <div class="w-10 h-10 mb-4 text-brand-orange">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path d="M7 11.5V14m0-2.5l4 3.5 5.5-5.5M14 6l2 2m-2-2L9.5 10.5m4.5-4.5l3.5 3.5m0 0L20 7.5M3 13.5l4-3.5m0 0L12 15m-5-5V7a2 2 0 012-2h4a2 2 0 012 2v2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <h4 class="text-sm font-bold text-gray-900 mb-1.5">Integrity</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">We do the right thing.</p>
+          </div>
 
-        <!-- Article Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Article 01 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">01 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">May 12, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Why Strong Brands Make Weak Products Win.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="SDS branded black bag" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW7vdmT9j9CPN3g_p67oQ05X8UKI-Jm6CUqZVEiostshWI7z3mfWvZ7hwIRA9CO2woj2FFNhTAzHilGmP5CAHyR1bgSmKYI5pHfQ-aaiPZPLBofVWC5qUd4Tdrg85WAmL8VdaX8YLjDWL8I83el99YR9NTRUITwZ9aemQq-f_ruYHbH-hr98P7gKHiLFOdoFa78TDMoFPIuWarOjqYnYwlpfrQgrAgh6qIh4uBGK89sUiIYRyTMHU" />
-                </div>
-            </article>
-            <!-- Article 02 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">02 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">May 05, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">The Strategy Behind Memorable Branding.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Strategy First black notebook and pen" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaL67R79IQpM9pePrUmShAwHQoBlRqJ_R9zczXu_clAmortdjqFHCXjW4WsbmcUuzWr4u3a_3Lpfv5RRrFcRViTe21uqx4CD83Cq4ODWU9htrN875dR2xUOxMiwszdmqnkyrLhzfSFifKUuYUb7AeFyzHMjjs413r5vxNuAhqKl1oY7HNj3WS10BBPmNHEhLRVqHWPn9L3QyHNRpqos6NlZ0Qzvdy0YDIoMln2Sn1lM-Oamu7kwRY" />
-                </div>
-            </article>
-            <!-- Article 03 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">03 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 28, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Designing Identities That Stand The Test Of Time.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Minimalist black boxes" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxHMgwIvvOPbYboUr_nDyoEtkRfF3YfE0aldC6GMWiLWl5HuHhGl67apb40AEWU9Sv9M5mzFTKiduMPcWJ7-FopJ6vPHsjokEti5XfYYXSZ85aS2J_qypfHt67b5Ma_rhDWwiQ0sCJz6ReXgk6L-23H10ltbhKYBNk-i0EbkBjKuRtT018mvJD6AlZTd4GaYzZb4kavRlAiNskgTYN1-GbAobam3dFR3dYswYsvZrPPKtCKB2p0eo" />
-                </div>
-            </article>
-            <!-- Article 04 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">04 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 21, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Content That Connects. Always.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Laptop displaying Content With Purpose" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuBO03IBPsNZgu14kp-BMQgX7bTUjDTzMZQUlnFJhXHpnE8NfcbUPLyZCDLQYDZ3Dg2M5YMr7_Cf-TKFX58_unCo3sT7aPGG4W3h3_zcfyR46R3AR2plwBxJdTwN8-OzdbdrtC2ZFhhPfII99Q2GqN1aps32qqkuYg6SLYI62KdyMmhYbMj5LCSEAPa4yN5aCVU5vXC3wL68nZcuvKUXRxk6El6Wz4banHZXirPDNfTrdiElRgi_w" />
-                </div>
-            </article>
-            <!-- Article 05 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">05 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 14, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">How We Turn Stories Into Brand Experiences.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Open book reading Story Creates Value" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJNT9HhXXOCwltjifiC6Wr7FFV3ZGUZ9nOq69DM2tmE1Nv4BqSNIB9fusaNtOlnU8bro1GNTb5hXRUxrPOF2i768znztxeE-TdJ1ECxZ7q8C9KnLC4o96iGNxipYemqShVtyKtgRUfg9pRhmtaz7yK36JKcrNNYwLpiOI7AlD2C5w9QLN8N4aRL1les9b3PTOETS0RMFRVHi0FFWu6oDkhH8Dcx9JEyaqbZHhL29P_YrGjU_RUdQU" />
-                </div>
-            </article>
-            <!-- Article 06 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">06 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Apr 07, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">From Idea To Impact: Our Brand Process.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Diagram showing process steps" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCgptDYOzlFGihMgD9HdNVO1mL6nHh0axz7xJFURuWJg6OKkWj73Ktj-RAjGd_E_gNqENlNLMODvG-EIgz5ZsjJIt_h36SkfqTvPH0F-dAtiKGQgsS0I8DmSKjh3izA3UrbenZfaveu4T-5n48dx4bwy_vaFM4rXBteyNf_2CfgBKuoWuO7sTMEI3dVcQ9s2iAeODlMqKp0YPda9yXSy6RSweo4mn7HAcOOaWOg_hNrS---TS5v5o" />
-                </div>
-            </article>
-            <!-- Article 07 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">07 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 31, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">The Power Of Consistency Across Platforms.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Mobile phone showing app interface" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1qy6jBRALwahCKr1pzzGMlZyUharTcdd5pu30iY6jyNe_lmh_zbwdglmpKTTb2_eVFdJ9XbhcC4LUVQrWTblgakRApEfT02Rp__g8q1F335_eyq4Tv5geXiPhTzQ5zNZDWnajI3EaOvVpQb8v9GVN6QOzD-e7N6ADAazRfc3rKX8ezS-j_PtYFYnpRa4o0WyGW8zLgOP5QY_5POY2X2l_6IjTnxDSre2nRGwacJMBhZBPA7PKrS8" />
-                </div>
-            </article>
-            <!-- Article 08 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">08 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 24, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Building Brands People Don't Scroll Past.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Open black book with Make It Matter text" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbkdbzu5o4itnkvYHBlSzb4_piAjJaJBX5GmcylXyC-Jd1-ioksc6WtvKH-JUUX9gxwvL8iiP8rnZUtBsRf4Yme9r0GHZtLotntx-ucpkRdFz4iW9jjCAedkXLpSONw5h20dKqoYd8xgiZo_WOfDn9G_CjAa0FLrMBj_OBsCzT3hlkej2jFx2YKP9c2NY-GAlTprqydzzOtajR7p9MDkb3tt1JK7phpyL80bDe58ORukXAmx9R9Ms" />
-                </div>
-            </article>
-            <!-- Article 09 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">09 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 17, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Brand Positioning That Creates Real Differentiation.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Black card reading Positioning Creates Preference" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB18dxNYFKiBodIXMdsXd_J0Bg3PYhB1wspw7aFcPU6qopuFf3vc_t0v4dwxUvtNkcJNVoEc4oDBotztVPZuU-EBwBOvj9FdIGhl6OGfNSL6fbeeJlQnv5BSrty-xoRRQTUlc4a6DeGKl565vIB6GF3VZ1fXnEu4eE0HO82yzF2AcTVkU1skuFV9Q8ZIM5yYiPaNIigpOKGT5wfALwvMM0JUkfmEpgpH7uiX2PxfjBtlr3Ygsl-gYI" />
-                </div>
-            </article>
-            <!-- Article 10 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">10 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 10, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Creative That Drives Business Forward.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="White card on black reading Creative Drives Growth" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG-amgHur4YpcP0onlQ5g3dPPQ7F8H0Hnb2ISwpUKJOZgRQZW3w3jMzYP1xegmtwmGs5rb75yAK1CzJK7NAxKq7XEJYeO5Ymjzf1uhkMxog3Upha9GfVeVjMSJXvpAILYH5FqgTPrp0n2dng5afSrL5sFJigJFD9hXLbR77-4zQHTGeIXGrqei--xRl6WUfPUD1fjo2lDDt2t6pAHkY2H9C-noNHrhD-0TRqduPtFuhgpkNqi2wZ0" />
-                </div>
-            </article>
-            <!-- Article 11 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">11 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Mar 03, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Packaging Is The First Brand Touchpoint.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="White box with SDS logo" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE14sHmHoy1H4cLd_iuARSqmhLUurwV2mUiJJlP9E4Qtlz6m7Odfow3lfbirlZNn5C81yg5s4J0yfmV1lwETXn3tWiKOYG8XcNc3f10QlPkZnOuI6Ckfvjf1xAwxnIWR5QNXodDd7gMMOhgH3dWpgPVZuyY-NaL1vwsRvNM06epu-Ue7OtpjBM7Ls8_F9n60RuIGoyVfY6IE5UvoKL03L0jD7G8jldcycEPq6hZqKQedUJ6AYgiRg" />
-                </div>
-            </article>
-            <!-- Article 12 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">12 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 25, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">The Role Of Typography In Brand Identity.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Typography layout showing letter A" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByea1HppiEaSTf1A26YdfmumzLdlBxUiFH-6uczKC2SZYeggeQ27txGCNh2TN5wT9jJMsdnCB5zLxVI6ef1AkLpydNY4tz0L99F_hwzTWBmDjxh_jveaYLDq9_ilHAahlbMr0pB5lkPfeH2YdX3MYNf5q-0UxYkFDHsyBgLvm_42--AeQLf3yCTM5Efh0KYCxikArZ3jaQjHLVifRRbE8JIuier1gw0Cxt_lmKPa3bdRhGtL1xDFw" />
-                </div>
-            </article>
-            <!-- Article 13 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">13 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 18, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Visual Systems That Scale With Your Brand.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Dark screen showing visual system grid" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPj200onDeVNNO9-5ZsaSA2CPslaXwD6S03CoW_Nrv7hPdNolHRxjN2sOGg-svnXsXG04lpfkQE4_RZXIWK2IcTsypVCDdjJf34tTzq5Y1TrtZ6cpWTHDdUmrwSm5A8mnzvyA2x-oGELIqi2Y7u70ErsYlF0YKUnTkVJRc5khrvS8VHi3Ewi5h_KmKrUylnQNqmZEagiFqbRY33sJbz5q14trBWWrzI6upp7G2I4eLea7i7o5xvT4" />
-                </div>
-            </article>
-            <!-- Article 14 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">14 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 11, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Measuring What Matters In Branding.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Dark dashboard showing metrics" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp8-kwpT4iGqi4it7fcZw2YF8y8t40dpnwkyv2WaWAFt0lban0xINQGjaTGmtlTdcPj2cyVnN2zLS6QUIgBXU8ZUmngdLe4PCYtwsKKTfgrONtpXdZ9AshH1vB9lQz0AWTDdpFEo6Qj-aCkwfuve81aBKQTwE00RBE7qjsjkmWNLrYeAnBhr5uOFVY-Q01fmZjq_BxZuu24KF_jwquWxZjFJJZALMlKye9UswiupedM_d74zort8Y" />
-                </div>
-            </article>
-            <!-- Article 15 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">15 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Feb 04, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Branding For The Future, Not Just Today.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Abstract sphere with text Future Ready Brands" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACMhDrCbbgTxXx8AFIBlRQR-WdKEPYsFOFQYKOwc1aUzBNPK-1NOMxdcvm-zAYfhoMqlxVWIPXamh0TTehyLKJ1aBCkzMPhdnlfvu6FV8y8sNHT4MrHHTEyzdF7TRTezAOoHRDUmUgmd73UX0eZYhnIq4ZSrxK8JObvYJLVtg9qN297tt4lSEymdwbFfCEGSafvtHuGekxhk67Y3IhMhJIoByv28G_TGahbJiCoDdCvokEguJnQPc" />
-                </div>
-            </article>
-            <!-- Article 16 -->
-            <article class="article-card flex flex-col sm:flex-row bg-white">
-                <div class="p-8 flex flex-col justify-between w-full sm:w-1/2">
-                    <div>
-                        <span class="text-xl font-light text-gray-400 mb-2 block">16 <span class="text-sm">-</span></span>
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Jan 28, 2024</p>
-                        <h2 class="text-2xl font-serif leading-snug mb-6 text-gray-900">Why Simplicity Always Wins.</h2>
-                    </div>
-                    <a class="text-xs font-bold uppercase tracking-widest flex items-center hover:opacity-70 transition-opacity" href="#">Read Article →</a>
-                </div>
-                <div class="w-full sm:w-1/2 article-image-container min-h-[250px] relative">
-                    <img alt="Minimalist black chair in an empty room" class="absolute inset-0 w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUzqOCv3HyIb3AL-05MR8MaXrjxM6usVef9QXAYQlhJ-T4He0cBfMYIwXco3VokffIz5exbpaJcaRGs7St231Jg66T5VRgBGqdtHAx0HV542Krq1LwktRAFoIjco0noyFr76eYKqpkW8JWntxGs5tTRVG7E9L0swEE94crTbbTHMngVhLKVe18oQfD2nuNlSwZNqY1hOXmOi6mmNWxaQlDcfVMr5j1uP2cs5DT8qzN-RnnrE5XzPM" />
-                </div>
-            </article>
-        </section>
+          <div class="scroll-reveal delay-2 flex flex-col">
+            <span class="text-xs font-bold text-gray-400 mb-3">02</span>
+            <div class="w-10 h-10 mb-4 text-brand-orange">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <h4 class="text-sm font-bold text-gray-900 mb-1.5">Innovation</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">We build better with new ideas.</p>
+          </div>
+
+          <div class="scroll-reveal delay-3 flex flex-col">
+            <span class="text-xs font-bold text-gray-400 mb-3">03</span>
+            <div class="w-10 h-10 mb-4 text-brand-orange">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <h4 class="text-sm font-bold text-gray-900 mb-1.5">Quality</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">We never compromise.</p>
+          </div>
+
+          <div class="scroll-reveal delay-4 flex flex-col">
+            <span class="text-xs font-bold text-gray-400 mb-3">04</span>
+            <div class="w-10 h-10 mb-4 text-brand-orange">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <h4 class="text-sm font-bold text-gray-900 mb-1.5">Trust</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">Relationships that last.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Side: Architectural Interior with Potted Plants -->
+      <div class="scroll-reveal delay-3 lg:col-span-4 relative min-h-[340px] lg:min-h-full">
+        <div class="relative w-full h-full overflow-hidden rounded-sm">
+          <img alt="Architectural Interior with Warm Lighting and Plants" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdiXh2fsRKz8SSBzps3TG98UEyjXOrt6suBBTHfhKe9CUUXbnacqf2bl-Npr413chpfiZvnlCVvn-pQbHMP0jxKMKl_dYUXSueVRpHSYx7rvLxE2ZiuI8IOKvHmKC9pig9ISGW-nkgxoU0poB-h_48l-zwfjEeAkHXp4aBjAonZpBGmNQZ5B97--WMJODzSREUMHJAWi59Be-m_NHO0U_0B-8-e6jE8KSt2qaKB5KqoNcbtUaA8kG4"/>
+          <div class="absolute right-6 top-1/2 -translate-y-1/2 text-right">
+            <div class="text-xs uppercase font-bold tracking-[0.25em] text-stone-800 leading-loose">
+              Spaces<br/>That<br/>Inspire<br/>People
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- END: OurValuesSection -->
+
+<!-- BEGIN: CommitmentSection (05) -->
+<section class="relative bg-brand-darkNavy text-white overflow-hidden min-h-[500px] flex items-center">
+  <div class="absolute inset-y-0 right-0 w-full lg:w-3/5 z-0 scroll-reveal">
+    <img alt="Modern Building Exterior at Twilight" class="w-full h-full object-cover object-center brightness-95" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxd45qzhXkqcXrL7FccqyraqIvGvk2jrXBWoIUEzFG7jzGhpj2otM4t8VH6ccsse90yMo9uCUE6hmvScyQdNqCFT5ExBms5lPf0HUoZLZvNvXSdalTUpZ8RdHfqznPXpTnX1fq8ArbRx727CNho37G6t7xl2E9uynvnHwvay8j4OC4hK6fQQbUBoM5plcosnAzwkH1QuRIN3qW5hnMkTThx2d85YPWv164IwCNdf3_iDUX2uGiXr9N"/>
+    <div class="absolute inset-0 cta-banner-gradient"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-16 lg:py-20">
+    <div class="max-w-2xl">
+      <div class="scroll-reveal flex items-center space-x-3 mb-6">
+        <span class="text-brand-orange font-bold text-xs tracking-wider">05</span>
+        <div class="w-8 h-[1.5px] bg-brand-orange"></div>
+        <span class="text-xs font-semibold uppercase tracking-widest text-gray-300">Our Commitment</span>
+      </div>
+
+      <h2 class="scroll-reveal delay-1 text-3xl sm:text-4xl lg:text-[48px] font-bold leading-tight mb-8">
+        Ready to Build<br/>
+        <span class="font-accent text-brand-orange font-normal">Safer, Smarter</span> Spaces?
+      </h2>
+
+      <p class="scroll-reveal delay-2 text-gray-300 text-base sm:text-lg leading-relaxed mb-10 max-w-lg">
+        Get in touch with our expert team today for construction, fire protection, and interior solutions tailored to your requirements.
+      </p>
+
+      <div class="scroll-reveal delay-3 flex flex-wrap gap-4">
+        <a class="inline-flex items-center gap-3 bg-brand-orange hover:bg-brand-orangeHover text-white text-sm font-bold px-8 py-4 rounded-full shadow-lg transition-all" href="https://wa.me/916361725590?text=Hello,%20I%20would%20like%20to%20get%20a%20quote%20for%20your%20services." target="_blank" rel="noopener noreferrer">
+          <span>Get a Free Quote</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+        <a class="inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold px-8 py-4 rounded-full backdrop-blur-sm transition-all border border-white/20" href="contact.html">
+          <span>Contact Us</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- END: CommitmentSection -->
+
+<!-- BEGIN: Footer -->
+<footer class="bg-brand-midnight text-gray-400 py-16 border-t border-gray-800">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
+      
+      <!-- Col 1: Brand Info -->
+      <div class="lg:col-span-2 space-y-5">
+        <a class="flex flex-col select-none group w-max" href="#">
+          <span class="text-2xl font-black tracking-tight text-white leading-none flex items-center">
+            <span class="text-brand-orange">KRIS</span>JOE
+          </span>
+          <span class="text-[10px] font-extrabold tracking-[0.28em] text-gray-300 mt-1 leading-none">
+            BUILDTECK
+          </span>
+        </a>
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm">
+          Building safe, smart, and sustainable spaces with 25+ years of industry expertise in construction, fire protection, and interior solutions.
+        </p>
+        <div class="text-xs text-gray-400 space-y-1">
+          <p class="font-semibold text-white">Contact:</p>
+          <p>+91 63617 25590</p>
+          <p>info@krisjoebuildteck.com</p>
+        </div>
+      </div>
+
+      <!-- Col 2: Navigation -->
+      <div>
+        <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-5">Navigation</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a class="hover:text-brand-orange transition-colors" href="buildtech.html">Home</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="aboutusbuildtek.html">About Us</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="services.html">Services</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="projects.html">Projects</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Services -->
+      <div>
+        <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-5">Services</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a class="hover:text-brand-orange transition-colors" href="Construction.html">Construction</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="Interiors.html">Interiors</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="Residential Developments.html">Residential Developments</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="Fire_Doors.html">Fire Doors</a></li>
+          <li><a class="hover:text-brand-orange transition-colors" href="Passive Fire Protection.html">Fire Protection</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Office Info -->
+      <div>
+        <h4 class="text-white text-sm font-bold uppercase tracking-wider mb-5">Office</h4>
+        <p class="text-sm leading-relaxed text-gray-400">
+          Professional engineering and construction solutions delivered with uncompromising safety and quality standards.
+        </p>
+      </div>
+
     </div>
 
-    <!-- ─── Carousel Script ─── -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cards = document.querySelectorAll('.card');
-            const wrapper = document.getElementById('carousel');
-            let activeIndex = 2;
-            let isAnimating = false;
-            let autoPlayInterval;
+    <div class="border-t border-gray-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+      <p>&copy; 2026 KrisJoe Buildteck. All rights reserved.</p>
+      <div class="flex space-x-6 mt-4 sm:mt-0">
+        <a class="hover:text-gray-400 transition-colors" href="#">Privacy Policy</a>
+        <a class="hover:text-gray-400 transition-colors" href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- END: Footer -->
 
-            const ANIMATION_SPEED = 700;
-            const AUTOPLAY_DELAY = 1800;
+<!-- JavaScript for Interactivity, Lenis Smooth Scroll & Scroll Reveals -->
+<script>
+  // Initialize Lenis Smooth Scroll
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    mouseMultiplier: 1,
+    smoothTouch: false,
+    touchMultiplier: 2,
+    infinite: false,
+  });
 
-            function updateCards() {
-                cards.forEach((card, i) => {
-                    let diff = (i - activeIndex) % 5;
-                    if (diff < -2) diff += 5;
-                    if (diff > 2) diff -= 5;
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
 
-                    card.className = 'card';
+  // Scroll Progress Bar Indicator
+  window.addEventListener('scroll', () => {
+    const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('scroll-progress').style.width = scrolled + '%';
+  });
 
-                    if (diff === 0) card.classList.add('pos-0');
-                    else if (diff === -1) card.classList.add('pos-m1');
-                    else if (diff === 1) card.classList.add('pos-p1');
-                    else if (diff === -2) card.classList.add('pos-m2');
-                    else if (diff === 2) card.classList.add('pos-p2');
-                });
-            }
+  // Intersection Observer for Repeatable Scroll Reveals
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -50px 0px',
+    threshold: 0.15
+  };
 
-            function navigate(direction) {
-                if (isAnimating) return;
-                isAnimating = true;
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      } else {
+        entry.target.classList.remove('is-visible');
+      }
+    });
+  }, observerOptions);
 
-                if (direction === 'next') activeIndex++;
-                else activeIndex--;
+  document.querySelectorAll('.scroll-reveal').forEach(el => {
+    observer.observe(el);
+  });
 
-                updateCards();
-                resetAutoPlay();
+  // Mobile Navigation Toggle
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  const closeIcon = document.getElementById('close-icon');
 
-                setTimeout(() => {
-                    isAnimating = false;
-                }, ANIMATION_SPEED);
-            }
+  function toggleMobileMenu() {
+    mobileMenu.classList.toggle('hidden');
+    hamburgerIcon.classList.toggle('hidden');
+    closeIcon.classList.toggle('hidden');
+  }
 
-            function startAutoPlay() {
-                autoPlayInterval = setInterval(() => {
-                    navigate('next');
-                }, AUTOPLAY_DELAY);
-            }
-
-            function resetAutoPlay() {
-                clearInterval(autoPlayInterval);
-                startAutoPlay();
-            }
-
-            updateCards();
-            startAutoPlay();
-
-            wrapper.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
-            wrapper.addEventListener('mouseleave', startAutoPlay);
-            wrapper.addEventListener('touchstart', () => clearInterval(autoPlayInterval), { passive: true });
-            wrapper.addEventListener('touchend', startAutoPlay, { passive: true });
-
-            cards.forEach((card, i) => {
-                card.addEventListener('click', () => {
-                    if (isAnimating) return;
-                    let diff = (i - activeIndex) % 5;
-                    if (diff < -2) diff += 5;
-                    if (diff > 2) diff -= 5;
-
-                    if (diff === 1 || diff === -4) navigate('next');
-                    else if (diff === -1 || diff === 4) navigate('prev');
-                });
-            });
-
-            window.addEventListener('wheel', (e) => {
-                if (isAnimating) return;
-                if (Math.abs(e.deltaY) > 40 || Math.abs(e.deltaX) > 40) {
-                    if (e.deltaY > 0 || e.deltaX > 0) navigate('next');
-                    else navigate('prev');
-                }
-            }, { passive: true });
-
-            let touchStartX = 0;
-            window.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            window.addEventListener('touchend', (e) => {
-                let touchEndX = e.changedTouches[0].screenX;
-                if (touchStartX - touchEndX > 40) navigate('next');
-                else if (touchEndX - touchStartX > 40) navigate('prev');
-            }, { passive: true });
-
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate('next');
-                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate('prev');
-            });
-        });
-    </script>
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+  }
+</script>
 
 </body>
 </html>
